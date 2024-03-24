@@ -1,0 +1,39 @@
+**The Beginning**
+
+- Downloaded react, made sure that the necessary bin was prepended to $PATH
+- Downloaded source code, unzipped it and ran “npm install” within the unzipped directory to install react dependencies
+- *learned that ‘npm start’ starts a local server and there I can view the code in a browser
+
+**Board Design**
+
+- Inspected source code , can have buttons on webpage with whatever text is needed inside of them: “ <button className="square">1</button> ”
+- Pasting many of these in a row creates boxes next to each other, however in order to avoid this and have them go row by row we use <div> </div>
+- We can define  function Square to hold the initializer for every square, and just call that function for every box instead of having to repeat large amounts of code, thus we can initialize every button using <Square />
+
+**Values into the Squares**
+- We can add a “value” parameter to the Square function, and then display it within each box, but we want to make this dependent on whether or not the player clicks the screen
+- This is where we use a function we call handleClick
+    - In its rudimentary form, upon the clicking of a square, we use onClick={handleClick} to log “clicked!” to the console
+- However, we want to put an ‘X’ into each box when clicked, so:
+    - Define in Square [value, setValue] = useState(null);
+    - value is our variable, setValue is our mutator that we can call, useState in this context initializes the variable value to null
+- Now we can change the function handleClick to call upon SetValue(‘X’) whenever the square is clicked, which will cause React to re render the board and display our X in our desired square!!!
+
+**Keeping track of X’s and O’s**
+
+- The tutorial makes a good point that the board needs to “know” how many X’s and O’s there are, however, we have our Square function doing all of this already
+- So, we can migrate most of the functions of Square into our default Board function, and use Square primarily as a means of updating the board
+- Thus, we initialize:
+    - const[squares, setsquares] = useState(Array(9).fill(null)) 
+    - This is initialized in Board, and allows each square to have its own array element that will be updated as the game is played
+- We migrate handleClick to Board
+    - Copy the array into a new array called nextSquares, and update the respective element that was clicked, then re-render using setSquares
+- For now, we are only rendering X’s and O’ , so we introduce another const nextX which is a bool that is flipped upon every square click, and this flipping between true and false will be utilized in a conditional statement within handleClick to display an X if true and an O if false
+
+
+**Winning the Game**
+
+- Pretty much everything is covered except winning the game
+- Thus, we introduce the function calculate winner which checks through the array squares[] to see if any single row, column, or diagonal contains three of the same character
+- If so, we return the character of the those uniform columns
+- The calculate winner does this, it examines a 2d array that contains all winning possibilities, and if contained, the game is won and all further clicks are stopped

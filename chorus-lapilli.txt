@@ -1,0 +1,52 @@
+***Implement the three or more movement policy***
+
+-  I want to introduce a ‘const [moves, setmoves] = useState(0);’ to keep track of the total moves made
+- This is better than tracking the moves of each individual player because there is no other way that each player can have made three moves without reaching six total
+
+- Easy case will be making a new div that says ‘three moves reached for each player’ first
+
+- Once that is done, now we basically want two ‘game modes’ 
+    - Inside handleClick, the behavior will be normal until moves >=6
+    - Once this happens, the conditional will be switched to the new mode, where the player must move their piece to a new square, up down left right or diagonal
+
+
+***Gamemode Switch***
+
+- In order to switch tic-tac-toe from normal game mode to chorus lapilli after three moves each from X and O, I will use the useEffect capability
+- This will detect state variables xmoves and omoves, and then update another state variable gamemode to ‘chorus’ once both xmoves and omoves are greater than three each
+- The handle click function will still take the parameter ‘I’, but will now call either a function called ‘standard’ or a function called ‘chorus’ with that parameter depending on if we have reached chorus lapilli mode yet
+
+***Standard Gamemode***
+- The standard game mode just uses the exact same functionality as the tic tac toe react tutorial
+
+***Chorus Lapilli Gamemode***
+- There are many parts to this function. similar to the standard game mode, if  a winner is present it constantly returns and no more clicking can be done. I explain it part by part below
+
+
+***How I implemented selecting***
+- After three moves, the chorus function will be called every time from handle click
+- In its early forms, minus the additional rules of chorus lapilli that restrict certain movements, I implementing selecting using simple state variables
+- On the first click, the square of the click is recorded. This is the square to be moved. A state variable, ‘select’ holds this index value from the 9-array of square
+- Now, the function returns, but increments a counter so that on the second click, a conditional is executed and moves on to code for the second click, which replaces the old square with NULL and replaces the new square with the symbol of the current move—X or O
+- The counter is reset and this cycle repeats for every single click
+
+***How I implemented ADJACENT MOVES ONLY***
+- The canMove function
+    - The canMove function holds all valid moves for every square on the board in a 2D array. For instance, square 0 can only move to adjacent squares 1,3,4. Each 0-8 square has an entry in an array
+    - canMove essentially takes a square # and checks if any adjacent squares can be moved to. If so RETURN TRUE! If not RETURN FALSE.
+- Before any of the squares are moved via the selecting and moving process before, canMove is called upon via a conditional with the selected square (select) being the source, and the new movement location (i) being the destination.
+- This is what allows players to move to adjacent squares or not, whether canMove is true or false
+
+***How I implemented the center vacancy/win only rule — LOCKS***
+- The canWin function
+    - Whenever the center square is filled, via useEffect, the canWin function is called
+    - canWin, via a complex set of conditionals, rigorously determines whether or not the game can be won in a single move if the center square is filled
+    - If so, it returns an array of the form [bool, piece to be moved, square to move to]
+        - Bool is true if game can be won and vice versa
+- If canWin is true and the center is filled, a LOCK called winLock is set (its just a bool set to true), and in the select and movement function called chorus, a conditional forces the player to either make the winning move, or if they fail to do so, at least vacate the center square. They are forced to do this via canWin
+- If canWin is not true, but the center square is occupied, another LOCK called ‘center lock’ is called and this simply locks the player from making any other moves unless they vacate the center
+
+ALL OF THE ABOVE FUNCTIONS OCCUR ON EVERY CLICK UNTIL THE GAME IS WON. MESSAGES ARE DISPLAYED TO THE USER TO INDICATE WHEN CHORUS LAPILLI MODE IS ENTERED, INVALID MOVES ARE MADE, AND WHEN THEY SHOULD VACATE THE CENTER SQUARE.
+
+
+NPM PACK DRY RUN, this very conveniently displays the contents of the tarball that you would have without the dry run!
